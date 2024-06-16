@@ -2,43 +2,41 @@ import React, { useState } from 'react';
 import { GrPrevious, GrNext } from 'react-icons/gr';
 import { CarrosselContainer, CarrosselWrapper, CarrosselItem, Controller } from './styledCarrossel';
 
-function Carrossel () {
-  
-  // estados pra controlar as animacoes do carrossel
-  const [IndexAtual, setIndexAtual] = useState(0);
+function Carrossel() {
+  const numSlides = 2; 
+
+  const [indexAtual, setIndexAtual] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  // funcao para proximo slide
-  const handleProximo = () => { 
+  const handleProximo = () => {
     if (!isAnimating) {
       setIsAnimating(true);
-      setIndexAtual((IndexAnterior) => (IndexAnterior + 1) % 2); 
+      setIndexAtual((indexAnterior) => (indexAnterior + 1) % numSlides);
     }
   };
 
-  // funcao para o slide anterior
   const handleAnterior = () => {
     if (!isAnimating) {
       setIsAnimating(true);
-      setIndexAtual((IndexAnterior) => (IndexAnterior - 1 + 2) % 2); 
+      setIndexAtual((indexAnterior) => (indexAnterior - 1 + numSlides) % numSlides);
     }
   };
 
-  // funcao para mudar o estado
-  const handleTransicao = () => {
+  const handleTransitionEnd = () => {
     setIsAnimating(false);
   };
 
   return (
     <CarrosselContainer>
-
       <Controller className="left" onClick={handleAnterior}><GrPrevious size={25}/></Controller>
 
       <CarrosselWrapper
-        style={{ transform: `translateX(-${IndexAtual * 100}%)`, transition: isAnimating ? 'transform 0.5s ease-in-out' : 'none' }}
-        onTransicao={handleTransicao}
+        style={{
+          transform: `translateX(-${indexAtual * 100}%)`,
+          transition: isAnimating ? 'transform 0.5s ease-in-out' : 'none'
+        }}
+        onTransitionEnd={handleTransitionEnd}
       >
-        {/* primeiro slide */}
         <CarrosselItem>
           <h2>Música para todos</h2>
           <div>
@@ -47,20 +45,17 @@ function Carrossel () {
           </div>
         </CarrosselItem>
 
-        {/* segundo slide */}
         <CarrosselItem>
           <h2>As melhores rádios</h2>
           <div>
             <button>♫ Ouça agora</button>
           </div>
         </CarrosselItem>
-
       </CarrosselWrapper>
 
       <Controller className="right" onClick={handleProximo}><GrNext size={25}/></Controller>
-
     </CarrosselContainer>
   );
-};
+}
 
 export default Carrossel;
